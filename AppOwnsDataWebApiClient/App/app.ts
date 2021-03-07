@@ -31,6 +31,7 @@ export class App {
 
   public static onDocumentReady = () => {
 
+    // initialize fields for UI elemenets 
     App.userGreeting = $("#user-greeting");
     App.login = $("#login");
     App.logout = $("#logout");
@@ -41,6 +42,7 @@ export class App {
     App.embedToolbar = $("#embed-toolbar");
     App.embedContainer = document.getElementById('embed-container');
 
+    // set up authentication callback
     SpaAuthService.uiUpdateCallback = App.onAuthenticationCompleted;
 
     App.login.on("click", async () => {
@@ -52,7 +54,8 @@ export class App {
       App.refreshUi();
     });
 
-    //SpaAuthService.attemptSillentLogin();
+    // Uncomment to enable auto-authentication on startup
+    // SpaAuthService.attemptSillentLogin();
 
     App.refreshUi();
   }
@@ -296,7 +299,6 @@ export class App {
   };
 
   private static logViewReportActivity = async (correlationId: string, report: Report, loadDuration: number, renderDuration) => {
-
     var logEntry: ActivityLogEntry = new ActivityLogEntry();
     logEntry.CorrelationId = correlationId;
     logEntry.Activity = "ViewReport";
@@ -309,13 +311,10 @@ export class App {
     logEntry.Dataset = (App.viewModel.datasets.find((dataset) => dataset.id === report.datasetId)).name; 
     logEntry.LoadDuration = loadDuration;
     logEntry.RenderDuration = renderDuration;
-
-    await AppOwnsDataWebApi.LogActivity(logEntry);
-    
+    await AppOwnsDataWebApi.LogActivity(logEntry);    
   };
 
   private static logEditReportActivity = async (report: Report) => {
-
     var logEntry: ActivityLogEntry = new ActivityLogEntry();
     logEntry.CorrelationId = "";
     logEntry.Activity = "EditReport";
@@ -326,13 +325,10 @@ export class App {
     logEntry.ReportId = report.id;
     logEntry.DatasetId = report.datasetId;
     logEntry.Dataset = (App.viewModel.datasets.find((dataset) => dataset.id === report.datasetId)).name;
-
     await AppOwnsDataWebApi.LogActivity(logEntry);
-
   };
 
   private static logCopyReportActivity = async(orginalReport: Report, reportId: string, reportName) => {
-
     var logEntry: ActivityLogEntry = new ActivityLogEntry();
     logEntry.Activity = "CopyReport";
     logEntry.UserId = App.viewModel.user;
@@ -343,13 +339,10 @@ export class App {
     logEntry.OriginalReportId = orginalReport.id;
     logEntry.DatasetId = orginalReport.datasetId;
     logEntry.Dataset = (App.viewModel.datasets.find((dataset) => dataset.id === orginalReport.datasetId)).name;
-
     await AppOwnsDataWebApi.LogActivity(logEntry);
-
   };
 
   private static logCreateReportActivity = async (dataset: Dataset, reportId: string, reportName) => {
-
     var logEntry: ActivityLogEntry = new ActivityLogEntry();
     logEntry.Activity = "CreateReport";
     logEntry.UserId = App.viewModel.user;
@@ -359,9 +352,7 @@ export class App {
     logEntry.ReportId = reportId;
     logEntry.DatasetId = dataset.id;
     logEntry.Dataset = dataset.name;
-
     await AppOwnsDataWebApi.LogActivity(logEntry);
-
   };
 
 }
